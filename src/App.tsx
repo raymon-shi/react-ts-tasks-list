@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
 import TaskInputForm from './components/TaskInputForm';
 import { ITask } from './interfaces';
