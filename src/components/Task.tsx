@@ -1,20 +1,59 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { ITask } from '../interfaces';
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Card } from 'react-bootstrap';
+import { AiFillDelete, AiOutlineCheckSquare } from 'react-icons/ai';
 
-const Task:React.FC<ITask> = ({uid, id, taskContent, isDone, creationTime}) => {  
-  return (
-    <Container className="w-50 mt-3">
+interface IProps extends ITask {
+  tasks: ITask[],
+  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>
+}
+
+const Task:React.FC<IProps> = ({uuid, id, taskContent, isDone, creationTime, tasks, setTasks}) => {
+  const completeTaskHandler:Function = (key: string):void => {
+    setTasks(tasks.map(t => t.uuid === uuid ? {...t, isDone: !t.isDone} : t))
+  }
+
+  const deleteTaskHander:Function = (uuid: string):void => {
+    setTasks(tasks.filter(t => t.uuid !== uuid))
+  }
+
+  const nonCompleteTask:Function = ():React.ReactElement => {
+    return (
       <Card >
         <Card.Body>
-          <h1>{`Task #: ${id}`}</h1>
-          <h2>{`Task Date: ${creationTime}`}</h2>
-          <h3>{`Task Content: ${taskContent}`}</h3>
+          {`📝`}
+          <h3>{`Task #: ${id}`}</h3>
+          <h4>{`Task Date: ${creationTime.toLocaleString([],{dateStyle: 'short', timeStyle: 'short'})}`}</h4>
+          <h5>{`Task Content: ${taskContent}`}</h5>
         </Card.Body>
-        {/* FIX THIS!! */}
-        <Button variant="success" onClick={() => !isDone}>Complete</Button>
-        <Button variant="danger">Delete</Button>
+        <Container>
+          <AiOutlineCheckSquare size="2em" onClick={() => {completeTaskHandler(uuid)}} />
+          <AiFillDelete size="2em" onClick={() => deleteTaskHander(uuid)}/>
+        </Container>
       </Card>
+    )
+  }
+
+  const completeTask:Function = ():React.ReactElement => {
+    return (
+      <Card >
+        <Card.Body>
+          {`📝`}
+          <h3 style={{textDecoration: "line-through", textDecorationColor: "green"}}>{`Task #: ${id}`}</h3>
+          <h4 style={{textDecoration: "line-through", textDecorationColor: "green"}}>{`Task Date: ${creationTime.toLocaleString([],{dateStyle: 'short', timeStyle: 'short'})}`}</h4>
+          <h5 style={{textDecoration: "line-through", textDecorationColor: "green"}}>{`Task Content: ${taskContent}`}</h5>
+        </Card.Body>
+        <Container>
+          <AiOutlineCheckSquare size="2em" onClick={() => {completeTaskHandler(uuid)}} />
+          <AiFillDelete size="2em" onClick={() => deleteTaskHander(uuid)}/>
+        </Container>
+      </Card>
+    )
+  }
+
+  return (
+    <Container className="w-50 mt-3">
+      {isDone ? completeTask() : nonCompleteTask()}
     </Container>
   )
 }

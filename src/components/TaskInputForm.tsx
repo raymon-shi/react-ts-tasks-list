@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import { Form, Button, Container } from 'react-bootstrap'
 import { ITask } from '../interfaces';
 import { v4 as uuidv4 } from 'uuid'
@@ -8,14 +8,14 @@ interface IProps {
   setTasks: React.Dispatch<React.SetStateAction<ITask[]>>
 }
 
-const TaskInputForm:React.FC<IProps> = ({tasks, setTasks}) => {
+const TaskInputForm:React.FC<IProps> = ({tasks, setTasks}):React.ReactElement => {
   const [inputTaskContent, setInputTaskContent] = useState<string>("");
   return (
-    <Container>
+    <Container className="mb-5 bg-warning">
       <Form onSubmit={(e:React.FormEvent) => {
         e.preventDefault()
         setTasks([...tasks, {
-          uid: uuidv4(),
+          uuid: uuidv4(),
           id: tasks.length + 1,
           taskContent: inputTaskContent,
           isDone: false,
@@ -30,7 +30,7 @@ const TaskInputForm:React.FC<IProps> = ({tasks, setTasks}) => {
             onChange={(e) => setInputTaskContent(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={inputTaskContent.length === 0}>
           Submit
         </Button>
       </Form>

@@ -1,5 +1,5 @@
 export interface ITask {
-  uid: string,
+  uuid: string,
   id: number,
   taskContent: string,
   isDone: boolean,
